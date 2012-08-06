@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^/proxy/index.php
+RewriteRule ^(.*)$ /proxy/index.php/$1 [L]
+
