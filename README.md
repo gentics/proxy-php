@@ -12,7 +12,7 @@ The request cycle is as follows
 
 ## Usage
 
-Copy the contents of this folder to the document root of your frontend server
+Copy this folder to the document root of your frontend server and preferrably call the folder 'proxy'.
 
 Adapt index.php and customize the following variables
 ```php
