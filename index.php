@@ -13,10 +13,10 @@
  * https url example: https://google.com/adsense
  * 
  */
-$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
 
-$CMS_SERVERHOST = 'http://example.com/';
-$PROXYNAME = '/proxy/';
+require_once "settings.conf.php";
+
+$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
 
 $request = array(
     'method'   => $_SERVER['REQUEST_METHOD'],
@@ -198,6 +198,8 @@ function http_request($request, $timeout = 5) {
 	preg_match('|HTTP/\d+\.\d+\s+(\d+)\s+.*|i',$status_line,$match);
 	$status = $match[1];
 
+	$status = '';
+	if(isset($match[1]))$status=$match[1];
 
 	return array('headers' => $headers, 'socket' => $sock, 'status' => $status);
 }
@@ -251,4 +253,3 @@ function myErrorHandler($msg)
 	echo "Gentics Aloha Editor AJAX Gateway Error: $msg";
 	exit();
 }
-?>
