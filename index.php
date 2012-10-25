@@ -54,15 +54,13 @@ if (isset($request['headers']['If-Modified-Since'])){
     unset($request['headers']['If-Modified-Since']);
 }
 
-// check if link exists
-// As no one ones what this is actually good for I take this out for now
-// as it breaks handling redirection requests
-//if (strpos($url, '?') === false){
-//   $url = $url.'?proxyprefix='.$PROXYNAME;
-//}
-//else {
-//   $url = $url.'&proxyprefix='.$PROXYNAME;
-//}
+// Add parameters to the query URL if specified
+if (!empty($HTTP_URL_ADD_QUERY_PARAMETER) && strpos($url, '?') === false){
+   $url = $url . '?' . $HTTP_URL_ADD_QUERY_PARAMETER;
+}
+else {
+   $url = $url . '&' . $HTTP_URL_ADD_QUERY_PARAMETER;
+}
 
 // Remove slash at the end of $CMS_SERVERHOST if there is one
 if (substr($url, -1) === '/') {
@@ -107,7 +105,26 @@ else {
 		$n_redirects++;
 
 		$url = $response['headers']['Location'];
-		$request['url'] = $response['headers']['Location'];
+
+		// For some unknown reason we got the new URL with the proxyname
+		// prepended back, so we have to remove that part of the URL.
+		// parse_url: http://php.net/manual/de/function.parse-url.php
+		$parsedURL = parse_url($url);
+		$url_path = $parsedURL['path'];
+
+		// Check if the redirection URL starts with our proxyname
+		if (substr($url_path, 0, strlen($PROXYNAME)) === $PROXYNAME) {
+			$url_path = substr($url_path, strlen($PROXYNAME));
+
+			// Now build the new URL
+			$url =
+				$parsedURL['scheme'] . '://' .
+				$parsedURL['host'] .
+				$url_path .
+				(empty($parsedURL['query']) ? '' : '?' . $parsedURL['query']);
+		}
+
+		$request['url'] = $url;
 		$response = http_request($request);
 	}
 }
