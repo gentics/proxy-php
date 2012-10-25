@@ -14,12 +14,14 @@ The request cycle is as follows
 
 Copy this folder to the document root of your frontend server and preferrably call the folder 'proxy'.
 
-Adapt index.php and customize the following variables
+Adapt the settings.con.php file and customize the following variables
 ```php
 // The URL of the backend server that browser requests should be proxied to
 $CMS_SERVERHOST = 'http://example.com/';
 // The path to the proxy script on the frontend server
 $PROXYNAME = '/proxy/';
+// Max times to follow a HTTP redirection response to a new URL
+$HTTP_MAX_REDIRECTS = 10;
 ```
 
 Adapt the .htaccess and replace occurrences of /proxy/ with the value of $PROXYNAME.
