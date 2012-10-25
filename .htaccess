@@ -1,4 +1,4 @@
 RewriteEngine on
-RewriteCond %{REQUEST_URI} !^/proxy/index.php
-RewriteRule ^(.*)$ /proxy/index.php/$1 [L]
+RewriteCond %{REQUEST_URI} !^/proxy-php/index.php
+RewriteRule ^(.*)$ /proxy-php/index.php/$1 [L]
 
