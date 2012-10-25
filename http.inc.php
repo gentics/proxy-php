@@ -9,8 +9,9 @@
  * @param $request the request method may optionally be overridden.
  * @param $timeout connection and read timeout in seconds
  */
-function http_request($request, $timeout = 5) {
 
+function http_request($request, $timeout = 5)
+{
 	$url = $request['url'];
 
 	// Extract the hostname from url
@@ -103,7 +104,6 @@ function http_request($request, $timeout = 5) {
 		 . $request_headers
 		 . "Connection: close\r\n\r\n";
 	fwrite($sock, $out);
-
 	fwrite($sock, $request['payload']);
 
 	$header_str = stream_get_line($sock, 1024*16, "\r\n\r\n");
@@ -126,7 +126,8 @@ function http_request($request, $timeout = 5) {
  * of key => values.
  * Inspired by HTTP::Daemon (CPAN).
  */
-function http_parse_headers($header_str) {
+function http_parse_headers($header_str)
+{
 	$headers = array();
 
 	//ignore leading blank lines

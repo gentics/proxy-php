@@ -1,4 +1,8 @@
 RewriteEngine on
-RewriteCond %{REQUEST_URI} !^/proxy-php/index.php
-RewriteRule ^(.*)$ /proxy-php/index.php/$1 [L]
+RewriteCond %{REQUEST_URI} !^/[proxy]/index.php
+RewriteRule ^(.*)$ /[proxy]/index.php/$1 [L]
 
+# This is a hack for PHP to prevent it from parsing multipart/form-data
+# There is no other way to do this, but if you know a better way feel free to change this.
+SetEnvIf Content-Type ^(multipart/form-data)(.*) NEW_CONTENT_TYPE=multipart/form-data-alternate$2 OLD_CONTENT_TYPE=$1$2
+RequestHeader set Content-Type %{NEW_CONTENT_TYPE}e env=NEW_CONTENT_TYPE

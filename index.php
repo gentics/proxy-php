@@ -24,9 +24,9 @@ $request = array(
     'method'   => $_SERVER['REQUEST_METHOD'],
     'protocol' => $_SERVER['SERVER_PROTOCOL'],
     'headers'  => getallheaders(),
-    //TODO: multipart/form-data is not handled by php://input. there
-    //doesn't seem to be a generic way to get at the raw post data for
-    //that content-type.
+    // multipart/form-data  should work when the directives
+    // in the .htaccess are working to prevent PHP from parsing
+    // our data
     'payload'  => file_get_contents('php://input'),
 );
 
@@ -132,7 +132,7 @@ else {
 // Forward the response code to our client
 // this sets the response code.
 // we don't use http_response_code() as that only works for PHP >= 5.4
-header(':', true, $response['status']);
+header('HTTP/1.0 ' . $response['status']);
 
 // forward each returned header...
 foreach ($response['headers'] as $key => $value) {
