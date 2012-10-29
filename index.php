@@ -26,9 +26,16 @@ $request = array(
     'headers'  => getallheaders(),
     // multipart/form-data  should work when the directives
     // in the .htaccess are working to prevent PHP from parsing
-    // our data
+    // our data. This is done by a hack
     'payload'  => file_get_contents('php://input'),
 );
+
+// Check if the header X-proxyphp-Content-Type was set by our mod-rewrite rule.
+// If yes: restore the original Content-Type header.
+if (isset($request['headers']['X-proxyphp-Content-Type'])) {
+	$request['headers']['Content-Type'] = $request['headers']['X-proxyphp-Content-Type'];
+	unset($request['headers']['X-proxyphp-Content-Type']);
+}
 
 $url = $_SERVER['REQUEST_URI'];
 
@@ -55,11 +62,11 @@ if (isset($request['headers']['If-Modified-Since'])){
 }
 
 // Add parameters to the query URL if specified
-if (!empty($HTTP_URL_ADD_QUERY_PARAMETER) && strpos($url, '?') === false){
-   $url = $url . '?' . $HTTP_URL_ADD_QUERY_PARAMETER;
+if (!empty($HTTP_URL_ADD_QUERY_PARAMETERS) && strpos($url, '?') === false){
+   $url = $url . '?' . $HTTP_URL_ADD_QUERY_PARAMETERS;
 }
 else {
-   $url = $url . '&' . $HTTP_URL_ADD_QUERY_PARAMETER;
+   $url = $url . '&' . $HTTP_URL_ADD_QUERY_PARAMETERS;
 }
 
 // Remove slash at the end of $CMS_SERVERHOST if there is one
@@ -136,16 +143,15 @@ header('HTTP/1.0 ' . $response['status']);
 
 // forward each returned header...
 foreach ($response['headers'] as $key => $value) {
+
 	if (strtolower($key) == 'content-length') {
-		//there is no need to specify a content length since we don't do keep
-		//alive, and this can cause problems for integration (e.g. gzip output,
-		//which would change the content length)
-		//Note: overriding with header('Content-length:') will set
-		//the content-length to zero for some reason
+		// There is no need to specify a content length since we don't do keep
+		// alive, and this can cause problems for integration (e.g. gzip output,
+		// which would change the content length)
+		// Note: overriding with header('Content-length:') will set
+		// the content-length to zero for some reason
 		continue;
 	}
-	header("$key: $value");
-
 }
 
 header('Connection: close');
