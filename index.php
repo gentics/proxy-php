@@ -152,6 +152,8 @@ foreach ($response['headers'] as $key => $value) {
 		// the content-length to zero for some reason
 		continue;
 	}
+
+	header($key . ': ' . $value);
 }
 
 header('Connection: close');
