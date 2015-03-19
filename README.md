@@ -1,6 +1,6 @@
 # proxy-php
 
-A simple PHP proxy that makes it possible to work around CORS limiations between a frontend and a backend server.
+A simple PHP proxy that makes it possible to work around CORS limitations between a frontend and a backend server.
 
 ## Overview
 
